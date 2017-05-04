@@ -1,4 +1,4 @@
-import {Graphics} from "pixi.js";
+import {DisplayObject, Graphics} from "pixi.js";
 import Piece from "../model/Piece";
 import CONSTANTS from "../constants/Constant";
 import {Utils} from "../model/Utils";
@@ -7,7 +7,7 @@ export default class Tetrimino  {
     // private _components : Graphics[];
     private _piece : Piece;
     private _velocity : number;
-    private _components : Component[];
+    private _components : any[];
     private _height : number;
     constructor(){
         this._velocity = 1;
@@ -34,12 +34,11 @@ export default class Tetrimino  {
     }
 
     public fall(){
-        
-        if(!this.isTouchDown()){
-            for (var i = 0; i < this._components.length; i++){
-                this._components[i].y += 1;
-            }
+       
+        for (var i = 0; i < this._components.length; i++){
+            this._components[i].y += 10;
         }
+
     }
 
     isTouchDown(){
@@ -50,7 +49,17 @@ export default class Tetrimino  {
         }
     }
 
-
-
+    collideWith(other){
+        for(var i = 0; i < this._components.length; i++){
+            for(var j = 0; j < other._components.length; j++){
+                var r1 = this._components[i];
+                var r2 = this._components[j];
+                if(Utils.boxesIntersect(r1, r2)){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
 }

@@ -25,7 +25,11 @@ export module Utils {
         return [iX, iY];
     }
 
-    export function boxesIntersect(a: DisplayObject, b: DisplayObject){
-        return a.x<b.x+40 && a.x+40>b.x && a.y<b.y+40 && a.y+40>b.y;
+    export function boxesIntersect(r1: any, r2: any){
+        return !(r2.x > (r1.x + r1.width) 
+                || (r2.x + r2.width) < r1.x 
+                || r2.y > (r1.y + r1.height) 
+                || (r2.y + r2.height) < r1.y);
+
     }
 }
