@@ -1,96 +1,77 @@
-import {Utils} from "./Utils";
-import Config from "../constants/Constant";
 
 export default class Piece {
-    private _name : string;
-    private _shape : number[][];
-    private _color : number;
-    constructor(name : string){
-        this._name = name;
-        switch(name) {
-           case "I" :
-               this._shape = [
-                   [0, 0, 0, 0],
-                   [1, 1, 1, 1],
-                   [0, 0, 0, 0],
-                   [0, 0, 0, 0]
-               ];
-               this._color = Config.COLORS.CYAN;
-               break;
-           case "J" :
-               this._shape = [
-                   [1, 1, 1],
-                   [0, 0, 1],
-                   [0, 0, 0]
-               ];
-               this._color = Config.COLORS.BLUE;
-               break;
-           case "L" :
-               this._shape = [
-                   [1, 1, 1],
-                   [1, 0, 0],
-                   [0, 0, 0]
-               ];
-               this._color = Config.COLORS.ORANGE;
-               break;
-           case "O":
-               this._shape = [
-                   [1, 1],
-                   [1, 1]
-               ];
-               this._color = Config.COLORS.YELLOW;
-               break;
-           case "S":
-               this._shape = [
-                   [0, 1, 1],
-                   [1, 1, 0],
-                   [0, 0, 0]
-               ];
-               this._color = Config.COLORS.LIME;
-               break;
-           case "T":
-               this._shape = [
-                   [1, 1, 1],
-                   [0, 1, 0],
-                   [0, 0, 0]
-               ];
-               this._color = Config.COLORS.PURPLE;
-               break;
-           case "Z":
-               this._shape = [
-                   [1, 1, 0],
-                   [0, 1, 1],
-                   [0, 0, 0]
-               ];
-               this._color = Config.COLORS.RED;
-               break;
-        }
+    public type: string;
+    public matrix: any;
+    public pos: any;
+    constructor(type: string){
+        this.type = type;
+        this.matrix = this.createPiece(type);
+        this.pos = {x: 0, y: 0};
     }
-
-    public rotate(){
-        this._shape = Utils.rotate(this._shape);
+    createPiece(type){
+         if (type === 'I') {
+        return [
+            [0, 1, 0, 0],
+            [0, 1, 0, 0],
+            [0, 1, 0, 0],
+            [0, 1, 0, 0],
+        ];
+    } else if (type === 'L') {
+        return [
+            [0, 2, 0],
+            [0, 2, 0],
+            [0, 2, 2],
+        ];
+    } else if (type === 'J') {
+        return [
+            [0, 3, 0],
+            [0, 3, 0],
+            [3, 3, 0],
+        ];
+    } else if (type === 'O') {
+        return [
+            [4, 4],
+            [4, 4],
+        ];
+    } else if (type === 'Z') {
+        return [
+            [5, 5, 0],
+            [0, 5, 5],
+            [0, 0, 0],
+        ];
+    } else if (type === 'S') {
+        return [
+            [0, 6, 6],
+            [6, 6, 0],
+            [0, 0, 0],
+        ];
+    } else if (type === 'T') {
+        return [
+            [0, 7, 0],
+            [7, 7, 7],
+            [0, 0, 0],
+        ];
     }
+}
 
-    get shape() : number[][]{
-        return this._shape;
-    }
-
-    get color() : number {
-        return this._color;
-    }
-
-    getHeight(): number {
-        var rows = [];
-        for(var i = 0; i < this._shape.length; i++){
-            for(var j = 0; j < this._shape[i].length; j++){
-                if(this._shape[i][j] == 1){
-                    rows.push(i);
-                }
+    rotate(dir: number){
+        const matrix = this.matrix;
+        for (let y = 0; y < matrix.length; ++y){
+            for (let x = 0; x < y; ++x) {
+                [
+                    matrix[x][y],
+                    matrix[y][x],
+                ] = [
+                    matrix[y][x],
+                    matrix[x][y],
+                ];
             }
         }
 
-        
-
-        return Math.max(...rows) - Math.min(...rows) + 1;
+        if (dir > 0) {
+            matrix.forEach(row => row.reverse());
+        } else {
+            matrix.reverse();
+        }
     }
-} 
+}
